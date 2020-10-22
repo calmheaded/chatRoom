@@ -1,199 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0,minimum-scale=1.0, maximum-scale=1.0,user-scalable=no">
+    <!-- 可以通过强制设置dpr。来关闭响应的viewport scale。使得viewport scale始终为固定值。 -->
+    <meta name="hotcss" content="initial-dpr=1">
+    <meta name="hotcss" content="max-width=640">
     <title>聊天室</title>
 </head>
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/socket.io/2.1.1/socket.io.js"></script>
-<!-- <script src="./jquery.min.js"></script>
-<script src="./socket.io.js"></script> -->
-<link rel="stylesheet" href="./style.css">
+<!-- cdn -->
+<!-- <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/socket.io/2.1.1/socket.io.js"></script> -->
+<script src="./js/jquery.min.js"></script>
+<script src="./js/socket.io.js"></script>
+<!-- https://github.com/imochen/hotcss -->
+<script src="./js/hotcss.js"></script>
+<!-- resetcss -->
+<link rel="stylesheet" href="./css/reset.css">
+<link rel="stylesheet" href="./css/style.css">
 <style>
- * {
-    margin: 0;
-    padding: 0;
-}
 
-/* .clearfix {
-    zoom: 1;
-} */
-
-.clearfix:after {
-    clear: both;
-    content: '.';
-    display: block;
-    width: 0;
-    height: 0;
-    visibility: hidden;
-}
-
-.main {
-    width: 100%;
-    height: 100%;
-    border: 1px solid blue;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-}
-
-.main-top {
-    height: 30px;
-    background-color: #3d3d3d;
-    text-indent: 15px;
-    color: #ffffff;
-    font-size: 16px;
-    line-height: 30px;
-}
-
-.main-body {
-    background-color: #efeff4;
-    position: absolute;
-    top: 30px;
-    bottom: 50px;
-    width: 100%;
-    overflow-y: scroll;
-    border: 1px solid red;
-    scrollbar-3dlight-color: ;
-}
-
-.chatRoomInfo {
-    padding: 10px;
-    font-size: 12px;
-    /* color: #666; */
-}
-
-.chatRoomTip {
-    text-align: center;
-    padding: 10px;
-    font-size: 12px;
-    color: #444;
-}
-
-.user {
-    width: 100%;
-    min-height: 38px;
-    min-width: 36px;
-    margin-bottom: 15px;
-}
-
-.user span {
-    float: right;
-}
-
-.user div {
-    float: right;
-    min-height: 38px;
-    min-width: 38px;
-    max-width: 70%;
-    line-height: 38px;
-    padding: 0 15px;
-    color: #FFFFFF;
-    margin-right: 10px;
-    word-break: break-all;
-    background-color: #007aff;
-    position: relative;
-    border-radius: 5px;
-}
-
-.user div:after {
-    content: "";
-    position: absolute;
-    right: -5px;
-    top: 4px;
-    width: 0;
-    height: 0;
-    border-top: solid transparent;
-    border-left: 7px solid #007aff;
-    border-bottom: 4px solid transparent;
-}
-
-.server {
-    width: 100%;
-    min-height: 38px;
-    min-width: 36px;
-    margin-bottom: 15px;
-}
-
-.server span {
-    float: left;
-}
-
-.server div {
-    float: left;
-    min-height: 38px;
-    min-width: 38px;
-    max-width: 70%;
-    line-height: 38px;
-    padding: 0 15px;
-    color: #FFFFFF;
-    margin-left: 10px;
-    word-break: break-all;
-    background-color: #007aff;
-    position: relative;
-    border-radius: 5px;
-}
-
-.server div:after {
-    content: "";
-    position: absolute;
-    left: -5px;
-    top: 4px;
-    width: 0;
-    height: 0;
-    border-top: solid transparent;
-    border-right: 7px solid #007aff;
-    border-bottom: 4px solid transparent;
-}
-.main-footer{
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 50px;
-}
-.input{
-    float: left;
-    width: 80%;
-    height: 40px;
-    margin-top: 5px;
-    margin-left: 1%;
-    margin-right: 1%;
-    border: 1px solid #666666;
-}
-.input input{
-    width: 100%;
-    height: 40px;
-    outline: none;
-    border: none;
-    font-size: 14px;
-    color: #333;
-}
-.send{
-    float: left;
-    width: 16%;
-    height: 40px;
-    margin-top: 5px;
-    margin-left: 1%;
-    border: none;
-    background-color: #e8e8e8;
-    color: #007aff;
-    outline: none;
-}
 </style>
-<body> 
-    <!-- <header id="header">
-        <nav class="link">
-            <h2 class="none">网站导航</h2>
-            <ul>
-                <li class="active"><a href="index.html">首页</a></li>
-                <li><a href="information.html">资讯</a></li>
-                <li><a href="ticket.html">票务</a></li>
-                <li><a href="about.html">关于</a></li>
-            </ul>
-        </nav>
-    </header> -->
+
+<body>
     <div class="main">
         <div class="main-top" id="responseText">
             <section class="chatRoomInfo">
@@ -202,7 +34,6 @@
         </div>
         <div class="main-body">
             
-            <!-- 
             <section class="chatRoomTip">
                 <div>子木加入到聊天室</div>
             </section>
@@ -218,103 +49,102 @@
             <div>
                 测试测试测试
             </div>
-        </section> -->
-
-      
-    </div>
-    <div class="main-footer clearfix">
-        <div class="input">
-            <input type="text" name="msg" id="msg" value="" />
+        </section>
         </div>
-        <button type="button" class="send" onclick="send()">发送</button>
+        <div class="main-footer clearfix">
+            <div class="input">
+                <input type="text" name="msg" id="msg" value="" />
+            </div>
+            <button type="button" class="send" onclick="send()">发送</button>
+        </div>
     </div>
-    </div>
-    
+
 </body>
 <script>
-     var socket = io('http://localhost:8080');
+    var socket = io('http://localhost:8080');
     let userId = genUid()
-    username='111'
-    let userInfo ={
-        'userid':1,
-        'username':username
+    username = '111'
+    let userInfo = {
+        'userid': 1,
+        'username': username
     }
-   window.onload=function(){
-    // socketio方式
-   
-    //通知用户有用户登录
-    socket.emit('login',userInfo);
-    //监听新用户登录
-    socket.on('login',function (data) {
-        console.log(data,'data')
-        alert(data)
-        updateMsg(data, 'login');
-   });
-    //发送消息
-    socket.on('message',function(obj){
-        console.log(obj,'obj')
-        if(obj.userid==userId) {
-                    var MsgHtml='<section class="user clearfix">'
-                                        +'<span>'+obj.username+'</span>'
-                                        +'<div>'+obj.content+'</div>'
-                                     +'</section>';
-                }
-                else{
-                    var MsgHtml='<section class="server clearfix">'
-                                         +'<span>'+obj.username+'</span>'
-                                         +'<div>'+obj.content+'</div>'
-                                      +'</section>';
-                }
-                $('.main-body').append(MsgHtml);
-                $('.main-body').scrollTop(99999);
-    })
-   
-   }
-      // 点击发送
-    function send(){
-        var content = $('input[name="msg"]').val();
-        if (content){
-                var obj={
-                    'userid':userId,
-                    'username':username,
-                    'content':content
-                }
-                socket.emit('message',obj);
-                $('input[name="msg"]').val("");
+    window.onload = function () {
+        // socketio方式
+
+        //通知用户有用户登录
+        socket.emit('login', userInfo);
+        //监听新用户登录
+        socket.on('login', function (data) {
+            console.log(data, 'data')
+            alert(data)
+            updateMsg(data, 'login');
+        });
+        //发送消息
+        socket.on('message', function (obj) {
+            console.log(obj, 'obj')
+            if (obj.userid == userId) {
+                var MsgHtml = '<section class="user clearfix">'
+                    + '<span>' + obj.username + '</span>'
+                    + '<div>' + obj.content + '</div>'
+                    + '</section>';
             }
+            else {
+                var MsgHtml = '<section class="server clearfix">'
+                    + '<span>' + obj.username + '</span>'
+                    + '<div>' + obj.content + '</div>'
+                    + '</section>';
+            }
+            $('.main-body').append(MsgHtml);
+            $('.main-body').scrollTop(99999);
+        })
+
+    }
+    // 点击发送
+    function send() {
+        var content = $('input[name="msg"]').val();
+        if (content) {
+            var obj = {
+                'userid': userId,
+                'username': username,
+                'content': content
+            }
+            socket.emit('message', obj);
+            $('input[name="msg"]').val("");
+        }
     }
     /*用户id生成*/
-    function  genUid() {
-       return (new Date().getTime()+""+Math.floor(Math.random()*899+100)).slice(-4);
- 
- }
-  /*监听函数*/
-  function updateMsg(o,action) {
-            //当前在线列表
-            var onlineUser=o.onlineUser;
-            //当前在线数
-            var onlineCount=o.onlineCount;
-            //新加用户
-            var user=o.user;
-            //更新在线人数
-            var userList='';
-            var separator = '';
-            for(key in onlineUser){
-                userList+=separator+onlineUser[key];
-                separator = '、';
-            }
-            //跟新房间信息
-            $('.chatNum').text(onlineCount);
-            $('.chatList').text(userList);
-            //系统消息
-            if(action=='login'){
-	            var sysHtml='<section class="chatRoomTip"><div>'+user.username+'进入聊天室</div></section>';
-            }
-            if(action=="logout"){
-            	var sysHtml='<section class="chatRoomTip"><div>'+user.username+'退出聊天室</div></section>';
-            }
-            $(".main-body").append(sysHtml);
-            $('.main-body').scrollTop(99999);
+    function genUid() {
+        return (new Date().getTime() + "" + Math.floor(Math.random() * 899 + 100)).slice(-4);
+
+    }
+    /*监听函数*/
+    function updateMsg(o, action) {
+        //当前在线列表
+        var onlineUser = o.onlineUser;
+        //当前在线数
+        var onlineCount = o.onlineCount;
+        //新加用户
+        var user = o.user;
+        //更新在线人数
+        var userList = '';
+        var separator = '';
+        for (key in onlineUser) {
+            userList += separator + onlineUser[key];
+            separator = '、';
         }
-  </script>
+        //跟新房间信息
+        $('.chatNum').text(onlineCount);
+        $('.chatList').text(userList);
+        //系统消息
+        if (action == 'login') {
+            var sysHtml = '<section class="chatRoomTip"><div>' + user.username + '进入聊天室</div></section>';
+        }
+        if (action == "logout") {
+            var sysHtml = '<section class="chatRoomTip"><div>' + user.username + '退出聊天室</div></section>';
+        }
+        $(".main-body").append(sysHtml);
+        $('.main-body').scrollTop(99999);
+    }
+</script>
+
 </html>
